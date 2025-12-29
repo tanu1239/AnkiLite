@@ -1,0 +1,270 @@
+:host {
+    display: block;
+  }
+  
+  /* Page background should be light; if you had a dark overlay, this helps override it locally */
+  .deck-head,
+  .grid {
+    color: #0f172a;
+  }
+  
+  .deck-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 18px 0 14px;
+  }
+  
+  .h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  
+  .sub {
+    margin: 6px 0 0 0;
+    color: #475569;
+    line-height: 1.45;
+    max-width: 720px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .col {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* ALERT */
+  .alert {
+    margin: 12px 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #7f1d1d;
+  }
+  
+  /* LAYOUT GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* CARDS */
+  .card {
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 14px 34px rgba(2, 6, 23, 0.08);
+  }
+  
+  .card-inner {
+    padding: 14px;
+  }
+  
+  /* Inputs */
+  label {
+    font-size: 12px;
+    color: #475569;
+    font-weight: 700;
+  }
+  
+  input,
+  select,
+  summary.btn {
+    width: 100%;
+  }
+  
+  input,
+  select {
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.16);
+    color: #0f172a;
+    outline: none;
+  }
+  
+  input:focus,
+  select:focus {
+    border-color: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    background: #fff;
+    color: #0f172a;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.04s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn:hover {
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  }
+  
+  .btn:active {
+    transform: translateY(1px);
+  }
+  
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .btn-primary {
+    border: 0;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #a855f7);
+    box-shadow: 0 10px 26px rgba(59, 130, 246, 0.22);
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.28);
+  }
+  
+  .btn-danger {
+    border: 0;
+    color: #fff;
+    background: linear-gradient(135deg, #ef4444, #fb7185);
+    box-shadow: 0 10px 26px rgba(239, 68, 68, 0.22);
+  }
+  
+  .btn-force {
+    border: 1px solid rgba(245, 158, 11, 0.30);
+    background: rgba(245, 158, 11, 0.10);
+    color: #7c2d12;
+  }
+  
+  .btn-force:hover {
+    border-color: rgba(245, 158, 11, 0.45);
+  }
+  
+  /* Pills / badges */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(59, 130, 246, 0.10);
+    color: #1e3a8a;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  
+  .kbd {
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(2, 6, 23, 0.04);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 12px;
+  }
+  
+  /* Deck list */
+  .deck-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  
+  .deck-tile {
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.10), rgba(168, 85, 247, 0.10));
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 14px 34px rgba(2, 6, 23, 0.08);
+    padding: 12px;
+  }
+  
+  .deck-tile-inner {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 14px;
+  }
+  
+  .deck-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .deck-name {
+    font-size: 18px;
+    font-weight: 1000;
+  }
+  
+  .deck-desc {
+    margin-top: 4px;
+    color: #475569;
+    font-size: 13px;
+  }
+  
+  .deck-schedule {
+    margin-top: 10px;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(2, 6, 23, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+  
+  .deck-section {
+    margin-top: 12px;
+  }
+  
+  /* Details styling */
+  details summary {
+    list-style: none;
+  }
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  /* Make summary look like button */
+  summary.btn {
+    cursor: pointer;
+    user-select: none;
+  }
+  summary.btn:focus {
+    outline: none;
+  }
+  
+  /* remove any weird inherited dim/filters */
+  :host, .card, .deck-tile, .deck-tile-inner, .grid {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+  

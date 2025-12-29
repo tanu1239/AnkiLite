@@ -1,0 +1,36 @@
+<div class="login-wrap">
+  <div class="card login-card">
+    <div class="card-inner">
+      <div class="h1">Welcome back</div>
+      <p class="sub">Log in to review your decks, or register a new account.</p>
+
+      <div class="grid-2">
+        <div class="col">
+          <label>Email</label>
+          <input [(ngModel)]="email" placeholder="you@example.com" autocomplete="username" />
+        </div>
+
+        <div class="col">
+          <label>Password</label>
+          <input [(ngModel)]="password" placeholder="••••••••" type="password" autocomplete="current-password" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:14px;">
+        <button class="btn btn-primary" type="button" (click)="onLogin()" [disabled]="loading">
+          {{ loading ? 'Signing in…' : 'Login' }}
+        </button>
+
+        <button class="btn" type="button" (click)="onRegister()" [disabled]="loading">
+          {{ loading ? 'Working…' : 'Register' }}
+        </button>
+      </div>
+
+      <div *ngIf="msg" class="alert">{{ msg }}</div>
+
+      <div class="hint">
+        Tip: try <span class="pill">test@example.com</span> if you created it earlier.
+      </div>
+    </div>
+  </div>
+</div>

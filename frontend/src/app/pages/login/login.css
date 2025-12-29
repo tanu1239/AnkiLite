@@ -1,0 +1,27 @@
+.login-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top: 40px;
+  }
+  
+  .login-card{
+    width: min(720px, 100%);
+  }
+  
+  .grid-2{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 700px){
+    .grid-2{ grid-template-columns: 1fr 1fr; }
+  }
+  
+  .hint{
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    opacity: 0.9;
+  }
+  

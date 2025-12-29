@@ -1,0 +1,326 @@
+<div class="deck-head">
+  <div>
+    <h1 class="h1">Decks</h1>
+    <p class="sub">
+      Create decks, set review intervals, add cards, and review using Due or Cram mode.
+    </p>
+  </div>
+
+  <div class="row">
+    <button class="btn" type="button" (click)="refresh()">Refresh</button>
+    <button class="btn btn-primary" type="button" (click)="goReview()">Start Review</button>
+    <button class="btn" type="button" (click)="logout()">Log out</button>
+  </div>
+</div>
+
+<p *ngIf="msg" class="alert">{{ msg }}</p>
+
+<div class="grid">
+  <!-- LEFT: Create Deck -->
+  <div class="card">
+    <div class="card-inner">
+      <div class="row" style="justify-content:space-between;">
+        <span class="pill">Create deck</span>
+        <span class="pill">Per-deck scheduling</span>
+      </div>
+
+      <div class="col" style="margin-top:14px; gap:12px;">
+        <div class="row">
+          <div class="col" style="flex:1; min-width:220px;">
+            <label>Deck name</label>
+            <input #dn placeholder="e.g., CS" />
+          </div>
+
+          <div class="col" style="flex:1; min-width:220px;">
+            <label>Description</label>
+            <input #dd placeholder="e.g., Algorithms" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col" style="min-width:260px;">
+            <label>Mode</label>
+            <select #mode>
+              <option value="hybrid">hybrid (learning steps early, adaptive long-term)</option>
+              <option value="fixed">fixed (buttons always equal these times)</option>
+            </select>
+          </div>
+
+          <span class="pill">Tip: Hybrid grows over time; Fixed stays constant.</span>
+        </div>
+
+        <div class="card" style="box-shadow:none;">
+          <div class="card-inner">
+            <span class="pill">Button intervals</span>
+
+            <div style="margin-top:12px; display:grid; gap:12px;">
+              <div class="row" style="justify-content:space-between;">
+                <div style="min-width:90px;"><b>Again</b></div>
+                <div class="row" style="flex:1; justify-content:flex-end;">
+                  <input #aVal placeholder="10" style="max-width:140px;" />
+                  <select #aUnit style="max-width:160px;">
+                    <option value="min">minutes</option>
+                    <option value="hour">hours</option>
+                    <option value="day">days</option>
+                    <option value="week">weeks</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" style="justify-content:space-between;">
+                <div style="min-width:90px;"><b>Hard</b></div>
+                <div class="row" style="flex:1; justify-content:flex-end;">
+                  <input #hVal placeholder="60" style="max-width:140px;" />
+                  <select #hUnit style="max-width:160px;">
+                    <option value="min">minutes</option>
+                    <option value="hour">hours</option>
+                    <option value="day">days</option>
+                    <option value="week">weeks</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" style="justify-content:space-between;">
+                <div style="min-width:90px;"><b>Good</b></div>
+                <div class="row" style="flex:1; justify-content:flex-end;">
+                  <input #gVal placeholder="1" style="max-width:140px;" />
+                  <select #gUnit style="max-width:160px;">
+                    <option value="min">minutes</option>
+                    <option value="hour">hours</option>
+                    <option value="day">days</option>
+                    <option value="week">weeks</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" style="justify-content:space-between;">
+                <div style="min-width:90px;"><b>Easy</b></div>
+                <div class="row" style="flex:1; justify-content:flex-end;">
+                  <input #eVal placeholder="3" style="max-width:140px;" />
+                  <select #eUnit style="max-width:160px;">
+                    <option value="min">minutes</option>
+                    <option value="hour">hours</option>
+                    <option value="day">days</option>
+                    <option value="week">weeks</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:14px;">
+              <button
+                class="btn btn-primary"
+                type="button"
+                [disabled]="creatingDeck"
+                (click)="createDeck(
+                  dn.value, dd.value, mode.value,
+                  aVal.value, ($any(aUnit.value)),
+                  hVal.value, ($any(hUnit.value)),
+                  gVal.value, ($any(gUnit.value)),
+                  eVal.value, ($any(eUnit.value))
+                )"
+              >
+                {{ creatingDeck ? 'Creating…' : 'Create Deck' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert" style="margin-top:0;">
+          <b>Note:</b> These times apply per deck. You can edit them later in <span class="kbd">Deck settings</span>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Deck List -->
+  <div class="card">
+    <div class="card-inner">
+      <div class="row" style="justify-content:space-between;">
+        <span class="pill">Your decks</span>
+        <span class="pill">{{ decks.length }} total</span>
+      </div>
+
+      <div *ngIf="decks.length === 0" class="alert" style="margin-top:12px;">
+        No decks yet. Create one on the left.
+      </div>
+
+      <div class="deck-list">
+        <div class="deck-tile" *ngFor="let d of decks">
+          <div class="deck-tile-inner">
+            <div class="deck-title-row">
+              <div>
+                <div class="deck-name">
+                  {{ d.name }}
+                  <span class="pill" style="margin-left:8px;">#{{ d.id }}</span>
+                </div>
+                <div class="deck-desc">
+                  {{ d.description || 'No description' }}
+                </div>
+              </div>
+
+              <span class="pill">{{ d.schedule_mode | uppercase }}</span>
+            </div>
+
+            <div class="deck-schedule">
+              <b>Intervals</b><br />
+              Again: {{ fromMinutes(d.again_minutes, d.again_unit) }} {{ d.again_unit }} •
+              Hard: {{ fromMinutes(d.hard_minutes, d.hard_unit) }} {{ d.hard_unit }} •
+              Good: {{ fromMinutes(d.good_minutes, d.good_unit) }} {{ d.good_unit }} •
+              Easy: {{ fromMinutes(d.easy_minutes, d.easy_unit) }} {{ d.easy_unit }}
+            </div>
+
+            <div class="deck-section">
+              <details>
+                <summary class="btn">Deck settings</summary>
+
+                <div class="card" style="box-shadow:none; margin-top:12px;">
+                  <div class="card-inner">
+                    <div class="row">
+                      <div class="col" style="min-width:240px;">
+                        <label>Mode</label>
+                        <select #mSel [value]="d.schedule_mode">
+                          <option value="hybrid">hybrid</option>
+                          <option value="fixed">fixed</option>
+                        </select>
+                      </div>
+                      <span class="pill">Save to apply future scheduling</span>
+                    </div>
+
+                    <div style="margin-top:12px; display:grid; gap:12px;">
+                      <div class="row" style="justify-content:space-between;">
+                        <div style="min-width:90px;"><b>Again</b></div>
+                        <div class="row" style="flex:1; justify-content:flex-end;">
+                          <input #a2 [defaultValue]="fromMinutes(d.again_minutes, d.again_unit)" style="max-width:140px;" />
+                          <select #au2 [value]="d.again_unit" style="max-width:160px;">
+                            <option value="min">minutes</option>
+                            <option value="hour">hours</option>
+                            <option value="day">days</option>
+                            <option value="week">weeks</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="row" style="justify-content:space-between;">
+                        <div style="min-width:90px;"><b>Hard</b></div>
+                        <div class="row" style="flex:1; justify-content:flex-end;">
+                          <input #h2 [defaultValue]="fromMinutes(d.hard_minutes, d.hard_unit)" style="max-width:140px;" />
+                          <select #hu2 [value]="d.hard_unit" style="max-width:160px;">
+                            <option value="min">minutes</option>
+                            <option value="hour">hours</option>
+                            <option value="day">days</option>
+                            <option value="week">weeks</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="row" style="justify-content:space-between;">
+                        <div style="min-width:90px;"><b>Good</b></div>
+                        <div class="row" style="flex:1; justify-content:flex-end;">
+                          <input #g2 [defaultValue]="fromMinutes(d.good_minutes, d.good_unit)" style="max-width:140px;" />
+                          <select #gu2 [value]="d.good_unit" style="max-width:160px;">
+                            <option value="min">minutes</option>
+                            <option value="hour">hours</option>
+                            <option value="day">days</option>
+                            <option value="week">weeks</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="row" style="justify-content:space-between;">
+                        <div style="min-width:90px;"><b>Easy</b></div>
+                        <div class="row" style="flex:1; justify-content:flex-end;">
+                          <input #e2 [defaultValue]="fromMinutes(d.easy_minutes, d.easy_unit)" style="max-width:140px;" />
+                          <select #eu2 [value]="d.easy_unit" style="max-width:160px;">
+                            <option value="min">minutes</option>
+                            <option value="hour">hours</option>
+                            <option value="day">days</option>
+                            <option value="week">weeks</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top:14px;">
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        (click)="saveDeckSettings(
+                          d, mSel.value,
+                          a2.value, ($any(au2.value)),
+                          h2.value, ($any(hu2.value)),
+                          g2.value, ($any(gu2.value)),
+                          e2.value, ($any(eu2.value))
+                        )"
+                      >
+                        Save settings
+                      </button>
+
+                      <button class="btn btn-force" type="button" (click)="forceDue(d.id, false)">
+                        Force due
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details style="margin-top:10px;">
+                <summary class="btn btn-primary">Add card</summary>
+
+                <div class="card" style="box-shadow:none; margin-top:12px;">
+                  <div class="card-inner">
+                    <div class="col" style="gap:10px;">
+                      <div class="col">
+                        <label>Front</label>
+                        <input #front placeholder="Front" />
+                      </div>
+
+                      <div class="col">
+                        <label>Back</label>
+                        <input #back placeholder="Back" />
+                      </div>
+
+                      <div class="col">
+                        <label>Tags (comma-separated)</label>
+                        <input #tags placeholder="math, dp, graphs" />
+                      </div>
+
+                      <div class="row">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          [disabled]="adding"
+                          (click)="addCard(d.id, front.value, back.value, tags.value, front, back, tags)"
+                        >
+                          {{ adding ? 'Adding…' : 'Add' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <details style="margin-top:10px;">
+                <summary class="btn btn-danger">Danger zone</summary>
+
+                <div class="alert" style="margin-top:12px;">
+                  <b>Force due now</b> makes every card immediately reviewable in Due mode.
+                  If you only want extra practice without changing scheduling, use <b>Cram</b> mode.
+                </div>
+
+                <div class="row">
+                  <button class="btn btn-danger" type="button" (click)="forceDue(d.id, false)">
+                    Force due now
+                  </button>
+                  <button class="btn btn-danger" type="button" (click)="forceDue(d.id, true)">
+                    Force due + reset progress
+                  </button>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #f6f8ff;
+    color: #0f172a;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  }
+  
+  /* If any global theme tried to darken the whole app, this prevents it */
+  body {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+  

@@ -1,0 +1,122 @@
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1 class="title">Review</h1>
+      <p class="sub">
+        Choose a deck and mode.
+        <span class="pill">Due</span> follows scheduling,
+        <span class="pill">Cram</span> lets you practice anything.
+      </p>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" (click)="goBack()">← Back to Decks</button>
+    </div>
+  </div>
+
+  <p *ngIf="msg" class="alert">{{ msg }}</p>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="col" style="display:flex; flex-direction:column; gap:6px;">
+      <label><b>Deck</b></label>
+      <select [value]="selectedDeckIdStr" (change)="onDeckChange(($any($event.target)).value)">
+        <option value="all">All decks</option>
+        <option *ngFor="let d of decks" [value]="d.id">{{ d.name }}</option>
+      </select>
+    </div>
+
+    <div class="col" style="display:flex; flex-direction:column; gap:6px;">
+      <label><b>Mode</b></label>
+      <select [value]="mode" (change)="onModeChange(($any($event.target)).value)">
+        <option value="due">Due (SRS)</option>
+        <option value="cram">Cram (practice any)</option>
+      </select>
+    </div>
+
+    <div style="flex:1;"></div>
+
+    <!-- keep ONE refresh button (top) -->
+    <button class="btn" type="button" (click)="loadQueue()" [disabled]="loading">
+      {{ loading ? 'Refreshing…' : 'Refresh queue (new session)' }}
+    </button>
+  </div>
+
+  <!-- DONE STATE -->
+  <div class="cardShell" *ngIf="!card">
+    <div class="card done">
+      <h3>🎉 Done for now!</h3>
+
+      <p>
+        {{
+          mode === 'due'
+            ? 'No cards are scheduled right now for'
+            : 'No cards available to practice right now for'
+        }}
+        <b>{{ deckName() }}</b>.
+      </p>
+
+      <p class="helper" *ngIf="mode === 'due'">
+        Tip: if you hit <b>Again</b>, it may come back after your deck’s “Again” interval.
+        If you want to practice even when nothing is due, switch to <b>Cram</b>.
+      </p>
+
+      <div class="doneActions">
+        <button class="btn" type="button" *ngIf="mode === 'due'" (click)="switchToCram()">
+          Switch to Cram
+        </button>
+
+        <button class="btn" type="button" (click)="goBack()">Back to Decks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD STATE -->
+  <div class="cardShell" *ngIf="card">
+    <div class="card">
+      <div class="cardTop">
+        <div class="row" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <span class="pill">Deck: <b class="deckTag">{{ deckName() }}</b></span>
+          <span class="pill">Mode: <b>{{ mode }}</b></span>
+          <span class="pill">Session: <b>{{ sessionId }}</b></span>
+        </div>
+
+        <!-- progress bar -->
+        <div class="progress" title="Queue progress">
+          <div [style.width.%]="progressPct()"></div>
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="qLabel">FRONT</div>
+        <div class="qText">{{ card.front }}</div>
+
+        <div *ngIf="revealed" class="aText">
+          <div class="qLabel" style="margin-top:12px;">BACK</div>
+          {{ card.back }}
+        </div>
+      </div>
+
+      <div class="actions" *ngIf="!revealed">
+        <button class="btn" type="button" (click)="reveal()">
+          Reveal
+        </button>
+      </div>
+
+      <div *ngIf="revealed">
+        <div class="helper">
+          Pick a grade. <b>Again</b> means you want to see it soon; <b>Easy</b> pushes it out further.
+        </div>
+
+        <div class="gradeRow">
+          <button class="gBtn gAgain" type="button" (click)="grade(0)" [disabled]="grading">Again</button>
+          <button class="gBtn gHard" type="button" (click)="grade(1)" [disabled]="grading">Hard</button>
+          <button class="gBtn gGood" type="button" (click)="grade(2)" [disabled]="grading">Good</button>
+          <button class="gBtn gEasy" type="button" (click)="grade(3)" [disabled]="grading">Easy</button>
+        </div>
+
+        <p *ngIf="grading" class="helper">Saving…</p>
+      </div>
+    </div>
+  </div>
+</div>

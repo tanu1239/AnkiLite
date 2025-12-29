@@ -1,0 +1,25 @@
+/* Reset everything to a clean light UI */
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #f5f7fb;
+    color: #1f2937;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  
+  /* Remove any accidental dark overlays */
+  * {
+    box-sizing: border-box;
+  }
+  
+  body::before,
+  body::after {
+    content: none !important;
+  }
+  
+  /* Make sure nothing dims the app */
+  app-root,
+  main {
+    background: transparent !important;
+  }
+  
